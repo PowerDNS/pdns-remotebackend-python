@@ -1,4 +1,6 @@
 import json
+import sys
+import io
 
 VERSION="0.1"
 
@@ -13,21 +15,26 @@ class Handler:
         return {'qtype': qtype, 'qname': qname, 'content': content, 
                 'ttl': ttl, 'auth': auth}
     
+    def record_prio(self, qname, qtype, content, prio, auth=1):
+        return self.record_prio_ttl(qname, qtype, content, prio, self.ttl, auth)
+
+    def record(self, qname, qtype, content, auth=1):
+        return self.record_prio(qname, qtype, content, 0, auth)
+    
     def do_initialize(self, *args):
         self.params = args
         self.log.append("PowerDNS python remotebackend version {0} initialized".format(VERSION))
         self.result = True
 
-    def do_lookup(self, args):
-        pass
-
 class Connector:
-    def __init__(self, klass, options):
+    def __init__(self, klass, options = {}):
         self.handler = klass # initialize the handler class
         self.options = options
 
     def mainloop(self, reader, writer):
         h = self.handler()
+        if 'ttl' in self.options:
+            h.ttl = options['ttl']
         while(True):
             line = reader.readline()
             if line == "":
@@ -45,3 +52,10 @@ class Connector:
                 writer.write(json.dumps({'result':h.result,'log':h.log}) + "\n")
             except ValueError:
                 writer.write(json.dumps({'result':False,'log':"Cannot parse input"}) + "\n")
+
+class PipeConnector(Connector):
+    def run(self):
+        try:
+           self.mainloop(sys.stdin, sys.stdout)
+        except KeyboardInterrupt, SystemExit:
+            pass
