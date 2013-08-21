@@ -19,7 +19,7 @@ To use, import pdns.remotebackend, and subclass Handler. This code
 currently supports Pipe and Unix Connector, which you can use.
 
 Example
---­----
+-------
 
 ```
 import pdns.remotebackend, pdns.remotebackend.unix
