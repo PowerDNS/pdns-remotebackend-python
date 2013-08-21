@@ -8,6 +8,8 @@ setup(name='Pdns_Remotebackend',
       author='Aki Tuomi',
       author_email='cmouse@cmouse.fi',
       url='https://github.com/cmouse/pdns-remotebackend-python',
-      packages=['pdns.remotebackend'],
-      package_dir={'pdns.remotebackend': 'src/pdns/remotebackend'},
+      packages=['pdns','pdns.remotebackend'],
+      package_dir={'pdns.remotebackend': 'src/pdns/remotebackend',
+                   'pdns':'src/pdns'},
+     
      )
