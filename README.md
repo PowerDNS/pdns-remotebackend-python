@@ -48,8 +48,8 @@ The Handler class will call your class with do_<api function>. initialize become
 Please see http://doc.powerdns.com/html/remotebackend.html for details on the API. 
 
 Connector constructor is 
-
- Connector(HandlerClass, options = {})
-
+```
+Connector(HandlerClass, options = {})
+```
 Supported options for all connectors is ttl, which defines default ttl to use if missing. For Unix Connector you can also specify path, which is path to the
 unix socket file to use. 
