@@ -57,5 +57,5 @@ class PipeConnector(Connector):
     def run(self):
         try:
            self.mainloop(sys.stdin, sys.stdout)
-        except KeyboardInterrupt, SystemExit:
+        except (KeyboardInterrupt, SystemExit):
             pass

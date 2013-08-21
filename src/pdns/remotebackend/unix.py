@@ -7,6 +7,7 @@ if sys.version_info < (3, 0):
     import SocketServer
 else:
     import socketserver
+    SocketServer = socketserver # backward compability for python2
 
 class UnixRequestHandler(SocketServer.StreamRequestHandler):
     def handle(self):
@@ -48,6 +49,6 @@ class UnixConnector(Connector):
         s.server_activate()
         try:
             s.serve_forever()
-        except KeyboardInterrupt, SystemExit:
+        except (KeyboardInterrupt, SystemExit):
             pass
         os.remove(path)
