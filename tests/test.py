@@ -1,0 +1,43 @@
+import io,re,unittest,os,json
+from subprocess import PIPE, STDOUT, Popen
+
+class pipetest(unittest.TestCase):
+    def test_pipe_abi_pipe(self):
+        sub = Popen(["/usr/bin/python", "src/pipe_abi.py", "pipe"], stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True, shell=False)
+        (writer,reader) = (sub.stdin, sub.stdout)
+        writer.write("HELO\t1\n")
+        writer.flush()
+        sub.poll()
+        line = reader.readline()
+        assert(re.match("^OK\t", line))
+        writer.write("Q\ttest.com\tIN\tSOA\t-1\t127.0.0.1\n")
+        line = reader.readline()
+        assert(re.match("^DATA\ttest.com\tIN\tSOA\t300\t-1\tsns.dns.icann.org. noc.dns.icann.org. 2013073082 7200 3600 1209600 3600", line))
+        line = reader.readline()
+        assert(re.match("^END", line))
+        writer.write("Q\tinvalid.test\tIN\tSOA\t-1\t127.0.0.1\n")
+        line = reader.readline()
+        assert(re.match("^FAIL", line))
+        sub.stdout.close()
+        sub.stdin.close()
+        sub.kill()
+        sub.wait()
+
+    def test_pipe_abi_remote(self):
+        sub = Popen(["/usr/bin/python", "src/pipe_abi.py", "remote"], stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True, shell=False)
+        (writer,reader) = (sub.stdin, sub.stdout)
+        writer.write(json.dumps({"method":"initialize","parameters":{"timeout":2000}}))
+        writer.write("\n")
+        writer.flush()
+        sub.poll()
+        resp = json.loads(reader.readline())
+        assert(resp["result"] == True)
+        writer.write(json.dumps({"method":"lookup","parameters":{"qname":"test.com","qtype":"SOA"}}))
+        writer.write("\n")
+        writer.flush()
+        resp = json.loads(reader.readline())
+        assert(resp["result"][0]["qname"] == "test.com")
+        sub.stdout.close()
+        sub.stdin.close()
+        sub.kill()
+        sub.wait()
