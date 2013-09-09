@@ -1,3 +1,5 @@
+"""Unix connector module"""
+
 import os, os.path
 import sys
 import json
@@ -9,32 +11,23 @@ else:
     import socketserver
     SocketServer = socketserver # backward compability for python2
 
-class UnixRequestHandler(SocketServer.StreamRequestHandler):
+class UnixRequestHandler(SocketServer.StreamRequestHandler, Connector):
+    """Class implementing unix read/write server"""
     def handle(self):
+        """Handle connection"""
         h = self.server.rpc_handler()
         if 'ttl' in self.server.rpc_options:
             h.ttl = self.server.rpc_options['ttl']
 
-        while(True):
-            line = self.rfile.readline()
-            if line == "":
-                break
-            try:
-                data_in = json.loads(line)
-                method = "do_{0}".format(data_in['method'].lower())
-                args = {}
-                if ('parameters' in data_in):
-                    args = data_in['parameters']
-                h.result = False
-                h.log = []
-                if (callable(getattr(h, method, None))):
-                    getattr(h, method)(args)
-                self.wfile.write(json.dumps({'result':h.result,'log':h.log}) + "\n")
-            except ValueError:
-                self.wfile.write(json.dumps({'result':False,'log':"Cannot parse input"}) + "\n")
+        if (self.server.rpc_options["abi"] == 'pipe'):
+            return self.mainloop3(self.rfile, self.wfile, h)
+        else:
+            return self.mainloop4(self.rfile, self.wfile, h)
 
 class UnixConnector(Connector):
+    """Connector class, which spawns a server and handler. Provide option path for constructor."""
     def run(self):
+        """Start listening in options['path'] and spawn handler per connection. Your remotebackend handler class is rebuilt between connections."""
         if 'path' in self.options:
             path = self.options['path']
         else:
