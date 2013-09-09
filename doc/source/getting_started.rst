@@ -46,3 +46,12 @@ To return a result, you set self.result into array of returns values, True, or w
 To push log messages into PowerDNS, you can add them into self.log. 
 
 :samp:`self.log << "Hello, world"`
+
+Pipe backend support
+====================
+From version 0.2, pipe backend is also supported. The only difference in python side is that you do
+
+... line-block:
+  pdns.remotebackend.PipeConnector(MyHandler, {"abi":"pipe"}).run()
+
+It is also supported for unix connector. Configure PowerDNS side as usual. It supports do_lookup and do_list methods.

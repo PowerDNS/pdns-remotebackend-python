@@ -49,6 +49,7 @@ class Connector:
             self.options["abi"] = 'remote'
 
     def mainloop(self, reader, writer):
+        """Setup basic reader/writer and start correct main loop"""
         h = self.handler()
         if 'ttl' in self.options:
             h.ttl = options['ttl']
