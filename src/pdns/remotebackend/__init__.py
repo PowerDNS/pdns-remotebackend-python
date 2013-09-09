@@ -147,9 +147,10 @@ class Connector:
                 h.log = []
                 if (callable(getattr(h, method, None))):
                     getattr(h,method)(args)
-                writer.write(json.dumps({'result':h.result,'log':h.log}) + "\n")
+                writer.write(json.dumps({'result':h.result,'log':h.log}))
             except ValueError:
-                writer.write(json.dumps({'result':False,'log':"Cannot parse input"}) + "\n")
+                writer.write(json.dumps({'result':False,'log':"Cannot parse input"}))
+            writer.write("\n")
             writer.flush()
 
 class PipeConnector(Connector):
