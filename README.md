@@ -16,7 +16,8 @@ Usage
 -----
 
 To use, import pdns.remotebackend, and subclass Handler. This code
-currently supports Pipe and Unix Connector, which you can use.
+currently supports Pipe and Unix Connector, which you can use. This version
+also supports pipe backend, you can signify this by setting option 'abi' to pipe.
 
 Example
 -------
