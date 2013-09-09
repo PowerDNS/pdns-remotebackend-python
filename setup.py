@@ -14,5 +14,5 @@ setup(name='Pdns_Remotebackend',
       packages=['pdns','pdns.remotebackend'],
       package_dir={'pdns.remotebackend': 'src/pdns/remotebackend',
                    'pdns':'src/pdns'},
-     
-     )
+                   
+)
