@@ -4,5 +4,4 @@ python:
   - "3.3"
 install: 
   - pip install --use-mirrors nose
-  - pip install --use-mirrors json
 script: nosetests -v tests
