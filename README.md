@@ -44,7 +44,7 @@ if __name__ == 'main'
 
 Details
 ---
-The Handler class will call your class with do_<api function>. initialize becomes do_initialize. The function is passed a hash with all the keys provided. 
+The Handler class will call your class with do\_\<api function\>. initialize becomes do\_initialize. The function is passed a hash with all the keys provided. 
 Please see http://doc.powerdns.com/html/remotebackend.html for details on the API. 
 
 Connector constructor is 
