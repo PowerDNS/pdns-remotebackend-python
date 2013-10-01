@@ -1,7 +1,7 @@
 """PowerDNS remotebackend support module"""
 import json,sys,io,re,os
 
-VERSION="0.3"
+VERSION="0.4"
 """Module version string"""
 
 class Handler:
@@ -68,6 +68,8 @@ class Connector:
         line = reader.readline()
         m = re.match("^HELO\t([1-3])", line)
         if m != None:
+            # simulate empty initialize
+            h.do_initialize({})
             writer.write("OK\tPowerDNS python remotebackend version {0} initialized\n".format(VERSION))
             writer.flush()
             self.abi = int(m.group(1))
@@ -96,9 +98,9 @@ class Connector:
                 method = "do_list"
             elif method == "Q":
                 parms = {"qname":line[1], "qclass":line[2], "qtype":line[3], "domain_id":int(line[4]), "zone_id":int(line[4]), "remote":line[5]}
-                if self.abi == 2:
+                if self.abi > 1:
                     parms["local"] = line[6]
-                if self.abi == 3:
+                if self.abi > 2:
                     parms["edns-subnet"] = line[7]
                 if (line[3] == "SOA"):
                     last_soa_name = line[1]
