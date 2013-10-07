@@ -51,7 +51,7 @@ Pipe backend support
 ====================
 From version 0.2, pipe backend is also supported. The only difference in python side is that you do
 
-... line-block:
+.. line-block:
   pdns.remotebackend.PipeConnector(MyHandler, {"abi":"pipe"}).run()
 
 It is also supported for unix connector. Configure PowerDNS side as usual. It supports do_lookup and do_list methods.
