@@ -52,7 +52,7 @@ class Connector:
         """Setup basic reader/writer and start correct main loop"""
         h = self.handler()
         if 'ttl' in self.options:
-            h.ttl = options['ttl']
+            h.ttl = self.options['ttl']
         if self.options["abi"] == 'pipe':
             return self.mainloop3(reader, writer, h)
         else:
@@ -62,7 +62,7 @@ class Connector:
         """Reader/writer and request de/serialization for pipe backend"""
         h = self.handler()
         if 'ttl' in self.options:
-            h.ttl = options['ttl']
+            h.ttl = self.options['ttl']
 
         # initialize
         line = reader.readline()
@@ -85,7 +85,7 @@ class Connector:
         last_soa_name = None
 
         while(True):
-            line = reader.readline().split("\t")
+            line = reader.readline().strip().split("\t")
             if (len(line) < 2):
                 break
             h.log = []
@@ -122,7 +122,7 @@ class Connector:
                     if (self.abi < 3):
                         writer.write("DATA\t{0}\t{1}\t{2}\t{3}\t{4}\t{5}\n".format(r["qname"], "IN", r["qtype"], r["ttl"], r["domain_id"], r["content"]))
                     else:
-                        writer.write("DATA\t{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\n".format((r["scopeMask"], r["auth"], r["qname"], "IN", r["qtype"], r["ttl"], r["domain_id"], r["content"])))
+                        writer.write("DATA\t{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\n".format(r["scopeMask"], r["auth"], r["qname"], "IN", r["qtype"], r["ttl"], r["domain_id"], r["content"]))
 
                 writer.write("END\n")
             else:
