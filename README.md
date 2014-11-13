@@ -37,7 +37,7 @@ class MyHandler(pdns.remotebackend.Handler):
             self.result.append(self.record_prio_ttl('test.com','A','127.0.0.1',0,300))
             self.result.append(self.record_prio_ttl('test.com','SOA','sns.dns.icann.org. noc.dns.icann.org. 2013073082 7200 3600 1209600 3600',0,300))
 
-if __name__ == 'main'
+if __name__ == '__main__':
 	pdns.remotebackend.PipeConnector(MyHandler).run()
 # or you can use
 #	pdns.remotebackend.unix.UnixConnector(MyHandler).run()
