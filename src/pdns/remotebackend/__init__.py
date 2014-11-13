@@ -9,7 +9,7 @@ class Handler:
        Please see http://doc.powerdns.com/html/remotebackend.html#remotebackend-api for information 
        on how to implement anything. All methods get called with hash containing the request variables."""
     def __init__(self):
-        """Inititalize with default values"""
+        """Initialize with default values"""
         self.log = []
         """Array of log messages"""
         self.result = False
@@ -66,7 +66,7 @@ class Connector:
 
         # initialize
         line = reader.readline()
-        m = re.match("^HELO\t([1-3])", line)
+        m = re.match("^HELO\t([1-4])", line)
         if m != None:
             # simulate empty initialize
             h.do_initialize({})
@@ -86,6 +86,8 @@ class Connector:
 
         while(True):
             line = reader.readline().strip().split("\t")
+            if not line:
+                break
             if (len(line) < 2):
                 break
             h.log = []
