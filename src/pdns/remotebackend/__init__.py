@@ -115,6 +115,9 @@ class Connector:
             if (callable(getattr(h, method, None))):
                 getattr(h,method)(parms)
 
+            if (len(h.log) > 0):
+                writer.write("LOG\t{0}\n".format(h.log[0]))
+
             if (h.result != False):
                 for r in h.result:
                     if ("scopeMask" in r) == False:
@@ -130,8 +133,6 @@ class Connector:
             else:
                 writer.write("FAIL\n")
 
-            if (len(h.log) > 0):
-                writer.write("LOG\t{0}\n".format(h.log[0]))
             writer.flush()
 
     def mainloop4(self, reader, writer, h):
