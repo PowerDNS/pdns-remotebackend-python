@@ -3,7 +3,7 @@ from subprocess import PIPE, STDOUT, Popen
 
 class pipetest(unittest.TestCase):
     def test_pipe_abi_pipe(self):
-        sub = Popen(["/usr/bin/python3.4", "src/pipe_abi.py", "pipe"], stdin=PIPE, stdout=PIPE, stderr=sys.stderr, close_fds=True, shell=False)
+        sub = Popen(["/usr/bin/python", "src/pipe_abi.py", "pipe"], stdin=PIPE, stdout=PIPE, stderr=sys.stderr, close_fds=True, shell=False)
         (writer,reader) = (sub.stdin, sub.stdout)
         writer.write("HELO\t1\n".encode("utf-8"))
         writer.flush()
