@@ -1,7 +1,7 @@
 """PowerDNS remotebackend support module"""
 import json,sys,io,re,os
 
-VERSION="0.5"
+VERSION="0.6"
 """Module version string"""
 
 class Handler:
