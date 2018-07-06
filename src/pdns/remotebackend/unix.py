@@ -1,15 +1,17 @@
 """Unix connector module"""
 
-import os, os.path
+import os
+import os.path
 import sys
-import json
+
 from pdns.remotebackend import Connector
 
 if sys.version_info < (3, 0):
     import SocketServer
 else:
     import socketserver
-    SocketServer = socketserver # backward compability for python2
+    SocketServer = socketserver  # backward compability for python2
+
 
 class UnixRequestHandler(SocketServer.StreamRequestHandler, Connector):
     """Class implementing unix read/write server"""
@@ -24,10 +26,13 @@ class UnixRequestHandler(SocketServer.StreamRequestHandler, Connector):
         else:
             return self.mainloop4(self.rfile, self.wfile, h)
 
+
 class UnixConnector(Connector):
-    """Connector class, which spawns a server and handler. Provide option path for constructor."""
+    """Connector class, which spawns a server and handler.
+       Provide option path for constructor."""
     def run(self):
-        """Start listening in options['path'] and spawn handler per connection. Your remotebackend handler class is rebuilt between connections."""
+        """Start listening in options['path'] and spawn handler per connection.
+           Your remotebackend handler class is rebuilt between connections."""
         if 'path' in self.options:
             path = self.options['path']
         else:
