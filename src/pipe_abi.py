@@ -1,6 +1,7 @@
-import pdns.remotebackend, pdns.remotebackend.unix
 import sys
-import io
+
+import pdns.remotebackend
+import pdns.remotebackend.unix
 
 class MyHandler(pdns.remotebackend.Handler):
     def do_lookup(self,args):
