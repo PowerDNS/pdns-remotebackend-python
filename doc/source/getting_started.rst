@@ -15,11 +15,11 @@ Quickstart script
       def do_lookup(self,args):
           if (args['qname'] == 'test.com' and args['qtype'] == 'ANY'):
               self.result = []
-              self.result.append(self.record_prio_ttl('test.com','A','127.0.0.1',0,300))
+              self.result.append(self.record('test.com','A','127.0.0.1',ttl=300))
           if (args['qname'] == 'test.com' and (args['qtype'] == 'ANY' or args['qtype'] == 'SOA')):
               self.result = []
-              self.result.append(self.record_prio_ttl('test.com','A','127.0.0.1',0,300))
-              self.result.append(self.record_prio_ttl('test.com','SOA','sns.dns.icann.org noc.dns.icann.org 2013073082 7200 3600 1209600 3600',0,300))
+              self.result.append(self.record('test.com','A','127.0.0.1',ttl=300))
+              self.result.append(self.record('test.com','SOA','sns.dns.icann.org noc.dns.icann.org 2013073082 7200 3600 1209600 3600',ttl=300))
 
   pdns.remotebackend.PipeConnector(MyHandler).run()
 
