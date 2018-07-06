@@ -8,7 +8,7 @@ from subprocess import PIPE, Popen
 
 class pipetest(unittest.TestCase):
     def test_pipe_abi_pipe(self):
-        sub = Popen(["/usr/bin/python", "src/pipe_abi.py", "pipe"],
+        sub = Popen(["/usr/bin/env", "python", "src/pipe_abi.py", "pipe"],
                     stdin=PIPE, stdout=PIPE, stderr=sys.stderr,
                     close_fds=True, shell=False)
         (writer, reader) = (sub.stdin, sub.stdout)
@@ -40,7 +40,7 @@ class pipetest(unittest.TestCase):
         sub.wait()
 
     def test_pipe_abi_remote(self):
-        sub = Popen(["/usr/bin/python", "src/pipe_abi.py", "remote"],
+        sub = Popen(["/usr/bin/env", "python", "src/pipe_abi.py", "remote"],
                     stdin=PIPE, stdout=PIPE, stderr=sys.stderr,
                     close_fds=True, shell=False)
         (writer, reader) = (sub.stdin, sub.stdout)
