@@ -72,5 +72,6 @@ class pipetest(unittest.TestCase):
         sub.kill()
         sub.wait()
 
+
 if __name__ == '__main__':
         unittest.main()
