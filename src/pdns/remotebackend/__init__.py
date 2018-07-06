@@ -3,7 +3,7 @@ import json
 import re
 import sys
 
-VERSION = "0.6"
+VERSION = "0.7"
 """Module version string"""
 
 
