@@ -55,7 +55,7 @@ class pipetest(unittest.TestCase):
         sub.poll()
         line = reader.readline().decode("utf-8")
         resp = json.loads(line)
-        assert(resp["result"] == True)
+        assert(resp["result"])
         writer.write(json.dumps({
             "method": "lookup",
             "parameters": {

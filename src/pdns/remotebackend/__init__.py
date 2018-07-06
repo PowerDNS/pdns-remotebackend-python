@@ -48,7 +48,7 @@ class Connector:
         """"Handler class"""
         self.options = options
         """Any options"""
-        if ("abi" in self.options) == False:
+        if "abi" not in self.options:
             self.options["abi"] = 'remote'
 
     def mainloop(self, reader, writer):
@@ -70,7 +70,7 @@ class Connector:
         # initialize
         line = reader.readline()
         m = re.match("^HELO\t([1-4])", line)
-        if m != None:
+        if m is not None:
             # simulate empty initialize
             h.do_initialize({})
             writer.write("OK\tPowerDNS python remotebackend version {0} \
@@ -129,11 +129,11 @@ class Connector:
             if (len(h.log) > 0):
                 writer.write("LOG\t{0}\n".format(h.log[0]))
 
-            if (h.result != False):
+            if not isinstance(h.result, bool):
                 for r in h.result:
-                    if ("scopeMask" in r) == False:
+                    if "scopeMask" not in r:
                         r["scopeMask"] = 0
-                    if ("domain_id" in r) == False:
+                    if "domain_id" not in r:
                         r["domain_id"] = int(parms["domain_id"])
                     if (self.abi < 3):
                         writer.write(
