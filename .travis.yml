@@ -3,5 +3,7 @@ python:
   - "2.7"
   - "3.3"
 install: 
-  - pip install --use-mirrors nose
-script: nosetests -v tests
+  - pip install --use-mirrors nose flake8
+script:
+  - flake8 src tests
+  - nosetests -v tests
