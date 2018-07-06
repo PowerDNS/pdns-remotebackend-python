@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='Pdns_Remotebackend',
@@ -10,6 +10,7 @@ setup(
     author='Aki Tuomi',
     author_email='cmouse@cmouse.fi',
     url='https://github.com/cmouse/pdns-remotebackend-python',
+    download_url='https://pypi.org/project/Pdns_Remotebackend',
     license='MIT',
     platforms=['all'],
     packages=['pdns','pdns.remotebackend'],
