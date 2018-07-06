@@ -19,18 +19,12 @@ class Handler:
         self.params = {}
         """Any handler parameters you want to store"""
 
-    def record_prio_ttl(self, qname, qtype, content, prio, ttl, auth=1):
-        """Generate one record without any defaults"""
+    def record(self, qname, qtype, content, ttl=-1, auth=1):
+        """Generate one record"""
+        if ttl == -1:
+            ttl = self.ttl
         return {'qtype': qtype, 'qname': qname, 'content': content, 
                 'ttl': ttl, 'auth': auth}
-    
-    def record_prio(self, qname, qtype, content, prio, auth=1):
-        """Generate one record with default ttl"""
-        return self.record_prio_ttl(qname, qtype, content, prio, self.ttl, auth)
-
-    def record(self, qname, qtype, content, auth=1):
-        """Generate one record with default ttl and prio (0)"""
-        return self.record_prio(qname, qtype, content, 0, auth)
     
     def do_initialize(self, *args):
         """Default handler for initialization method, stores any parameters into attribute params"""
