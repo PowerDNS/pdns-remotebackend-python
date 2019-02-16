@@ -2,6 +2,7 @@
 import json
 import re
 import sys
+import traceback
 
 VERSION = "0.7"
 """Module version string"""
@@ -177,7 +178,11 @@ class Connector:
                 writer.write(json.dumps({'result': h.result, 'log': h.log}))
             except ValueError:
                 writer.write(json.dumps({'result': False,
-                                         'log': "Cannot parse input"}))
+                                         'log': [ "Cannot parse input" ]}))
+            except:
+                writer.write(json.dumps({'result': False,
+                                         'log': [ traceback.format_exc() ]}))
+
             writer.write("\n")
             writer.flush()
 
