@@ -178,10 +178,11 @@ class Connector:
                 writer.write(json.dumps({'result': h.result, 'log': h.log}))
             except ValueError:
                 writer.write(json.dumps({'result': False,
-                                         'log': [ "Cannot parse input" ]}))
-            except:
+                                         'log': ["Cannot parse input"]}))
+            # errors are never visible if we don't catch this exception.
+            except BaseException:
                 writer.write(json.dumps({'result': False,
-                                         'log': [ traceback.format_exc() ]}))
+                                         'log': [traceback.format_exc()]}))
 
             writer.write("\n")
             writer.flush()
