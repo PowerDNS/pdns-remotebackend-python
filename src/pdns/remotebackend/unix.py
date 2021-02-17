@@ -27,6 +27,11 @@ class UnixRequestHandler(SocketServer.StreamRequestHandler, Connector):
             return self.mainloop4(self.rfile, self.wfile, h)
 
 
+class ThreadedUnixStreamServer(SocketServer.ThreadingMixIn,
+                               SocketServer.UnixStreamServer):
+    pass
+
+
 class UnixConnector(Connector):
     """Connector class, which spawns a server and handler.
        Provide option path for constructor."""
@@ -40,7 +45,8 @@ class UnixConnector(Connector):
         if os.path.exists(path):
             os.remove(path)
 
-        s = SocketServer.UnixStreamServer(path, UnixRequestHandler, False)
+        s = SocketServer.ThreadedUnixStreamServer(path, UnixRequestHandler,
+                                                  False)
         s.rpc_handler = self.handler
         s.rpc_options = self.options
         s.server_bind()
