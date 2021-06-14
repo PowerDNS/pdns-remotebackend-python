@@ -14,7 +14,11 @@ class Handler:
        http://doc.powerdns.com/html/remotebackend.html#remotebackend-api
        for information on how to implement anything. All methods get called
        with hash containing the request variables."""
-    def __init__(self):
+
+    description = "PowerDNS python remotebackend"
+    version = VERSION
+
+    def __init__(self, options={}):
         """Initialize with default values"""
         self.log = []
         """Array of log messages"""
@@ -24,6 +28,11 @@ class Handler:
         """Default TTL"""
         self.params = {}
         """Any handler parameters you want to store"""
+        self.options = options
+        """Connector options"""
+
+        if 'ttl' in self.options:
+            self.ttl = self.options['ttl']
 
     def record(self, qname, qtype, content, ttl=-1, auth=1):
         """Generate one record"""
@@ -36,9 +45,18 @@ class Handler:
         """Default handler for initialization method, stores any parameters
            into attribute params"""
         self.params = args
-        self.log.append("PowerDNS python remotebackend version {0} \
-                        initialized".format(VERSION))
+        self.log.append(
+            "{0} version {1} initialized".format(
+                self.description, self.version
+            )
+        )
         self.result = True
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
 
 
 class Connector:
@@ -54,28 +72,25 @@ class Connector:
 
     def mainloop(self, reader, writer):
         """Setup basic reader/writer and start correct main loop"""
-        h = self.handler()
-        if 'ttl' in self.options:
-            h.ttl = self.options['ttl']
-        if self.options["abi"] == 'pipe':
-            return self.mainloop3(reader, writer, h)
-        else:
-            return self.mainloop4(reader, writer, h)
+        with self.handler(options=self.options) as h:
+            if self.options["abi"] == 'pipe':
+                return self.mainloop3(reader, writer, h)
+            else:
+                return self.mainloop4(reader, writer, h)
 
     def mainloop3(self, reader, writer, h):
         """Reader/writer and request de/serialization for pipe backend"""
-        h = self.handler()
-        if 'ttl' in self.options:
-            h.ttl = self.options['ttl']
-
         # initialize
         line = reader.readline()
         m = re.match("^HELO\t([1-4])", line)
         if m is not None:
             # simulate empty initialize
             h.do_initialize({})
-            writer.write("OK\tPowerDNS python remotebackend version {0} \
-                         initialized\n".format(VERSION))
+            writer.write(
+                "OK\t{0} version {1} initialized\n".format(
+                    h.description, h.version
+                )
+            )
             writer.flush()
             self.abi = int(m.group(1))
         else:
