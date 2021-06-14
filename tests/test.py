@@ -1,12 +1,17 @@
+import os
 import json
 import unittest
 import re
 import sys
+import socket
+import time
 
 from subprocess import PIPE, Popen
 
 
 class pipetest(unittest.TestCase):
+    unix_socket = "/tmp/remotebackend.sock"
+
     def test_pipe_abi_pipe(self):
         sub = Popen(["/usr/bin/env", "python", "src/pipe_abi.py", "pipe"],
                     stdin=PIPE, stdout=PIPE, stderr=sys.stderr,
@@ -71,6 +76,28 @@ class pipetest(unittest.TestCase):
         sub.stdin.close()
         sub.kill()
         sub.wait()
+
+    def test_pipe_abi_pipe_unix(self):
+        sub = Popen(["/usr/bin/env", "python", "src/pipe_abi.py", "pipe",
+                    self.unix_socket])
+
+        for _ in range(20):
+            if os.path.exists(self.unix_socket):
+                break
+
+            time.sleep(0.2)
+
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        try:
+            s.connect(self.unix_socket)
+
+            s.sendall("HELO\t1\n".encode("utf-8"))
+            line = s.recv(100).decode("utf-8")
+            assert(re.match("^OK\t", line))
+        finally:
+            sub.kill()
+            sub.wait()
+            s.close()
 
 
 if __name__ == '__main__':

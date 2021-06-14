@@ -19,4 +19,10 @@ class MyHandler(pdns.remotebackend.Handler):
                             ttl=300))
 
 
-pdns.remotebackend.PipeConnector(MyHandler, {"abi": sys.argv[1]}).run()
+if __name__ == '__main__':
+    options = {"abi": sys.argv[1]}
+    if len(sys.argv) > 2:
+        options['path'] = sys.argv[2]
+        pdns.remotebackend.unix.UnixConnector(MyHandler, options).run()
+    else:
+        pdns.remotebackend.PipeConnector(MyHandler, options).run()

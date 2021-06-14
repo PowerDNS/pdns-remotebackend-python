@@ -9,6 +9,7 @@ from pdns.remotebackend import Connector
 if sys.version_info < (3, 0):
     import SocketServer
 else:
+    import io
     import socketserver
     SocketServer = socketserver  # backward compability for python2
 
@@ -17,14 +18,23 @@ class UnixRequestHandler(SocketServer.StreamRequestHandler, Connector):
     """Class implementing unix read/write server"""
     def handle(self):
         """Handle connection"""
-        h = self.server.rpc_handler()
-        if 'ttl' in self.server.rpc_options:
-            h.ttl = self.server.rpc_options['ttl']
+        options = self.server.rpc_options
+        with self.server.rpc_handler(options=options) as h:
+            if sys.version_info < (3, 0):
+                rfile = self.rfile
+                wfile = self.wfile
+            else:
+                rfile = io.TextIOWrapper(
+                    self.rfile, encoding="utf-8", newline="\n"
+                )
+                wfile = io.TextIOWrapper(
+                    self.wfile, encoding="utf-8", newline="\n"
+                )
 
-        if (self.server.rpc_options["abi"] == 'pipe'):
-            return self.mainloop3(self.rfile, self.wfile, h)
-        else:
-            return self.mainloop4(self.rfile, self.wfile, h)
+            if (options["abi"] == 'pipe'):
+                return self.mainloop3(rfile, wfile, h)
+            else:
+                return self.mainloop4(rfile, wfile, h)
 
 
 class ThreadedUnixStreamServer(SocketServer.ThreadingMixIn,
@@ -45,8 +55,7 @@ class UnixConnector(Connector):
         if os.path.exists(path):
             os.remove(path)
 
-        s = SocketServer.ThreadedUnixStreamServer(path, UnixRequestHandler,
-                                                  False)
+        s = ThreadedUnixStreamServer(path, UnixRequestHandler, False)
         s.rpc_handler = self.handler
         s.rpc_options = self.options
         s.server_bind()
