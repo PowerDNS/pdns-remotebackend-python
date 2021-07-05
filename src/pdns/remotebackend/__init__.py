@@ -4,7 +4,7 @@ import re
 import sys
 import traceback
 
-VERSION = "0.7.1"
+VERSION = "0.7.2"
 """Module version string"""
 
 
