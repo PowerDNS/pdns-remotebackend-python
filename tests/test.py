@@ -98,6 +98,7 @@ class pipetest(unittest.TestCase):
             sub.kill()
             sub.wait()
             s.close()
+            os.unlink(self.unix_socket)
 
 
 if __name__ == '__main__':
