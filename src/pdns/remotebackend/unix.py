@@ -15,6 +15,10 @@ else:
 
 
 class UnixRequestHandler(SocketServer.StreamRequestHandler, Connector):
+    def __init__(self, *args):
+        SocketServer.StreamRequestHandler.__init__(self, *args)
+        Connector.__init__(self)
+
     """Class implementing unix read/write server"""
     def handle(self):
         """Handle connection"""

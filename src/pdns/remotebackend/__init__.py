@@ -104,13 +104,13 @@ class Connector:
         """Reader/writer and request de/serialization for pipe backend"""
         # initialize
         line = reader.readline()
-        if self.tracer:
+        if getattr(self, 'tracer', None):
             self.tracer.write(line)
 
         m = re.match("^HELO\t([1-4])", line)
         if m is not None:
             # simulate empty initialize
-            h.do_initialize({})
+            h.do_initialize()
             writer.write(
                 "OK\t{0} version {1} initialized\n".format(
                     h.description, h.version
