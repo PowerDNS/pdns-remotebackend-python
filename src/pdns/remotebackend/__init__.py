@@ -9,7 +9,8 @@ VERSION = "0.8.0"
 
 
 class Handler:
-    """Base class for request handler, you have to implement at least do_lookup.
+    """Base class for request handler, you have to implement at least
+       do_lookup.
        Please see
        http://doc.powerdns.com/html/remotebackend.html#remotebackend-api
        for information on how to implement anything. All methods get called
@@ -121,7 +122,7 @@ class Connector:
         else:
             writer.write("FAIL\n")
             writer.flush()
-            while(True):
+            while True:
                 line = reader.readline()
                 if line == "":
                     return
@@ -129,7 +130,7 @@ class Connector:
         # keep track of last seen SOA for AXFR
         last_soa_name = None
 
-        while(True):
+        while True:
             line = reader.readline()
             if self.tracer:
                 self.tracer.write(line)
@@ -204,7 +205,7 @@ class Connector:
     def mainloop4(self, reader, writer, h):
         """Reader/writer and request de/serialization for remotebackend"""
 
-        while(True):
+        while True:
             line = reader.readline()
             if self.tracer:
                 self.tracer.write(line)
