@@ -28,12 +28,12 @@ import sys
 import io
 
 class MyHandler(pdns.remotebackend.Handler):
-    def do_lookup(self,args):
+    def do_lookup(self, qname='', qtype='', **kwargs):
         self.result =  []
         self.log.append("Handling a new DNS request")
-        if (args['qname'] == 'test.com' and args['qtype'] == 'ANY'):
+        if (qname == 'test.com' and qtype == 'ANY'):
             self.result.append(self.record('test.com','A','127.0.0.1',ttl=300))
-        if (args['qname'] == 'test.com' and (args['qtype'] == 'ANY' or args['qtype'] == 'SOA')):
+        if (qname == 'test.com' and (qtype == 'ANY' or qtype == 'SOA')):
             self.result.append(self.record('test.com','A','127.0.0.1',ttl=300))
             self.result.append(self.record('test.com','SOA','sns.dns.icann.org. noc.dns.icann.org. 2013073082 7200 3600 1209600 3600',ttl=300))
 
