@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='Pdns_Remotebackend',
-    version='0.8.0',
+    version='0.8.1',
     description='Support package for PowerDNS remotebackend',
     long_description='This package is intended to make writing remotebackends with python easier. It provides base class for request handling and connector classes for pipe and unix connectors.',
     author='Aki Tuomi',
