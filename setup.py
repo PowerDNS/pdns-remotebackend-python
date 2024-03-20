@@ -9,7 +9,7 @@ setup(
     long_description='This package is intended to make writing remotebackends with python easier. It provides base class for request handling and connector classes for pipe and unix connectors.',
     author='Aki Tuomi',
     author_email='cmouse@cmouse.fi',
-    url='https://github.com/cmouse/pdns-remotebackend-python',
+    url='https://github.com/PowerDNS/pdns-remotebackend-python',
     download_url='https://pypi.org/project/Pdns_Remotebackend',
     license='MIT',
     platforms=['all'],
