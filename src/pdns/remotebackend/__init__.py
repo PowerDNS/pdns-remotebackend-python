@@ -59,6 +59,20 @@ class Handler:
         pass
 
 
+class TraceWriter(object):
+    def __init__(self, writer, tracer):
+        self.writer = writer
+        self.tracer = tracer
+
+    def write(self, line):
+        self.tracer.write(line)
+        self.writer.write(line)
+
+    def flush(self):
+        self.tracer.flush()
+        self.writer.flush()
+
+
 class Connector:
     """Connector base class for handling endless loop"""
     def __init__(self, klass, options={}):
@@ -69,9 +83,17 @@ class Connector:
         """Any options"""
         if "abi" not in self.options:
             self.options["abi"] = 'remote'
+        if 'rawlog' in self.options:
+            self.tracer = open(self.options['rawlog'], 'w')
+        else:
+            self.tracer = None
 
     def mainloop(self, reader, writer):
         """Setup basic reader/writer and start correct main loop"""
+
+        if self.tracer:
+            writer = TraceWriter(writer, self.tracer)
+
         with self.handler(options=self.options) as h:
             if self.options["abi"] == 'pipe':
                 return self.mainloop3(reader, writer, h)
@@ -82,6 +104,9 @@ class Connector:
         """Reader/writer and request de/serialization for pipe backend"""
         # initialize
         line = reader.readline()
+        if self.tracer:
+            self.tracer.write(line)
+
         m = re.match("^HELO\t([1-4])", line)
         if m is not None:
             # simulate empty initialize
@@ -105,7 +130,10 @@ class Connector:
         last_soa_name = None
 
         while(True):
-            line = reader.readline().strip().split("\t")
+            line = reader.readline()
+            if self.tracer:
+                self.tracer.write(line)
+            line = line.strip().split("\t")
             if not line:
                 break
             if (len(line) < 2):
@@ -178,6 +206,8 @@ class Connector:
 
         while(True):
             line = reader.readline()
+            if self.tracer:
+                self.tracer.write(line)
             if line == "":
                 break
             try:
