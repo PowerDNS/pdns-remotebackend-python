@@ -41,7 +41,7 @@ class Handler:
         return {'qtype': qtype, 'qname': qname, 'content': content,
                 'ttl': ttl, 'auth': auth}
 
-    def do_initialize(self, *args):
+    def do_initialize(self, **args):
         """Default handler for initialization method, stores any parameters
            into attribute params"""
         self.params = args
@@ -140,7 +140,7 @@ class Connector:
                 continue
 
             if (callable(getattr(h, method, None))):
-                getattr(h, method)(parms)
+                getattr(h, method)(**parms)
 
             if (len(h.log) > 0):
                 writer.write("LOG\t{0}\n".format(h.log[0]))
@@ -189,7 +189,7 @@ class Connector:
                 h.result = False
                 h.log = []
                 if (callable(getattr(h, method, None))):
-                    getattr(h, method)(args)
+                    getattr(h, method)(**args)
                 writer.write(json.dumps({'result': h.result, 'log': h.log}))
             except ValueError:
                 writer.write(json.dumps({'result': False,
